@@ -1,5 +1,6 @@
-import { Search, Star, MapPin, Phone, MessageCircle, Heart, Calendar, CheckCircle, Lightbulb, Globe, Users, FileText, Send } from "lucide-react"
+import { Search, Star, MapPin, Heart, Calendar, CheckCircle, Lightbulb, Globe, Users, FileText, Send } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import Logo from "../components/Logo"
 
@@ -236,7 +237,7 @@ export default async function HomePage() {
           </div>
           
           <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide">
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
@@ -278,8 +279,8 @@ export default async function HomePage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {realWeddings.map((wedding, index) => (
-              <div key={index} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-2xl hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1">
+            {realWeddings.map((wedding) => (
+                              <div key={wedding.couple} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-2xl hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1">
                 <div className="relative h-64 bg-gradient-to-br from-emerald-100 to-emerald-200 overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center text-emerald-600">
                     <div className="text-center">
@@ -319,7 +320,7 @@ export default async function HomePage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {weddingTools.map((tool, index) => (
+            {weddingTools.map((tool) => (
               <Link
                 key={tool.title}
                 href={tool.href}
@@ -351,7 +352,7 @@ export default async function HomePage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {weddingTips.map((tip, index) => (
+            {weddingTips.map((tip) => (
               <div key={tip.title} className="group bg-white rounded-2xl p-8 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:border-emerald-200">
                 <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-200 transition-colors">
                   <tip.icon className="w-8 h-8 text-emerald-600" />
@@ -384,10 +385,11 @@ export default async function HomePage() {
                 <div key={vendor.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-2xl hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1">
                   <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                     {vendor.photos[0] ? (
-                      <img
+                      <Image
                         src={vendor.photos[0].url}
                         alt={vendor.businessName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">

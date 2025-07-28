@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
-import { Filter, Star, MapPin, Phone, MessageCircle, Check, Send } from "lucide-react"
+import { Filter, Star, MapPin, Check, Send } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import Logo from "../../components/Logo"
 
@@ -120,10 +121,11 @@ function VendorCard({ vendor }: { vendor: any }) {
     <div className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-2xl hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1">
       <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
         {vendor.photos[0] ? (
-          <img
+          <Image
             src={vendor.photos[0].url}
             alt={vendor.businessName}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">

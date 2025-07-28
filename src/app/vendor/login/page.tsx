@@ -34,7 +34,7 @@ export default function VendorLoginPage() {
       } else {
         router.push('/vendor/dashboard')
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)

@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Star, MessageSquare, Calendar, Settings, Eye, Phone, Mail, Clock } from 'lucide-react'
+import { Star, MessageSquare, Calendar, Eye, Phone, Mail, Clock } from 'lucide-react'
 import Logo from '../../../components/Logo'
 
 interface QuoteRequest {

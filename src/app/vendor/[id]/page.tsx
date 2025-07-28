@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
-import { Star, MapPin, Phone, MessageCircle, Mail, Globe, Check, Calendar, Send } from "lucide-react"
+import { Star, MapPin, Globe, Check, Send } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import Logo from "../../../components/Logo"
 
@@ -204,10 +205,11 @@ export default async function VendorProfilePage({ params }: { params: Promise<{ 
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               {mainPhoto && (
                 <div className="h-64 md:h-96 relative">
-                  <img
+                  <Image
                     src={mainPhoto.url}
                     alt={vendor.businessName}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   {vendor.verified && (
                     <div className="absolute top-4 right-4">
@@ -322,11 +324,12 @@ export default async function VendorProfilePage({ params }: { params: Promise<{ 
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">Gallery</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {galleryPhotos.map((photo) => (
-                    <div key={photo.id} className="aspect-square rounded-lg overflow-hidden">
-                      <img
+                    <div key={photo.id} className="aspect-square rounded-lg overflow-hidden relative">
+                      <Image
                         src={photo.url}
                         alt={photo.alt || vendor.businessName}
-                        className="w-full h-full object-cover hover:scale-105 transition duration-200"
+                        fill
+                        className="object-cover hover:scale-105 transition duration-200"
                       />
                     </div>
                   ))}
