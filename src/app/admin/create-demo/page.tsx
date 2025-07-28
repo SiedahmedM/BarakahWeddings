@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { UserPlus, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 
 export default function CreateDemoVendorPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -131,9 +132,9 @@ export default function CreateDemoVendorPage() {
           <div className="text-center">
             <p className="text-sm text-gray-500">
               After creating the demo vendor, you can login at{' '}
-              <a href="/vendor/login" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link href="/vendor/login" className="text-blue-600 hover:text-blue-700 font-medium">
                 /vendor/login
-              </a>
+              </Link>
             </p>
           </div>
         </div>

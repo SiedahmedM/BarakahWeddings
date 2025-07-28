@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   if (!prisma) {
     return NextResponse.json(
       { error: 'Database not configured' },
@@ -27,9 +26,6 @@ export async function POST(request: NextRequest) {
         }
       })
     }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash('demo123', 12)
 
     // Create demo user and vendor
     const demoUser = await prisma.user.create({
