@@ -12,7 +12,33 @@ export async function POST(request: NextRequest) {
   }
   
   try {
-    const data = await request.json()
+    const formData = await request.formData()
+    
+    // Extract form data
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+      businessName: formData.get('businessName') as string,
+      description: formData.get('description') as string,
+      category: formData.get('category') as string,
+      phone: formData.get('phone') as string,
+      whatsapp: formData.get('whatsapp') as string,
+      website: formData.get('website') as string,
+      address: formData.get('address') as string,
+      city: formData.get('city') as string,
+      state: formData.get('state') as string,
+      priceRange: formData.get('priceRange') as string,
+      islamicCompliances: JSON.parse(formData.get('islamicCompliances') as string || '[]'),
+      yearsInBusiness: formData.get('yearsInBusiness') as string,
+      serviceAreas: JSON.parse(formData.get('serviceAreas') as string || '[]'),
+      maxCapacity: formData.get('maxCapacity') as string,
+      minCapacity: formData.get('minCapacity') as string,
+      eventTypes: JSON.parse(formData.get('eventTypes') as string || '[]'),
+      businessHours: JSON.parse(formData.get('businessHours') as string || '{}'),
+      paymentMethods: JSON.parse(formData.get('paymentMethods') as string || '[]'),
+      workSamples: formData.getAll('workSamples') as File[]
+    }
 
     const {
       name,
@@ -27,13 +53,21 @@ export async function POST(request: NextRequest) {
       address,
       city,
       state,
-      zipCode,
       priceRange,
-      islamicCompliances
+      islamicCompliances,
+      // Essential fields
+      yearsInBusiness,
+      serviceAreas,
+      maxCapacity,
+      minCapacity,
+      eventTypes,
+      businessHours,
+      paymentMethods,
+      workSamples
     } = data
 
     // Validate required fields
-    if (!name || !email || !password || !businessName || !category || !phone || !address || !city || !state || !zipCode || !priceRange) {
+    if (!name || !email || !password || !businessName || !category || !description || !phone || !city || !state || !priceRange) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -75,15 +109,24 @@ export async function POST(request: NextRequest) {
           whatsapp: whatsapp || null,
           email,
           website: website || null,
-          address,
+          address: address || null,
           city,
           state,
-          zipCode,
+          zipCode: null, // No longer required
           priceRange,
           islamicCompliances: islamicCompliances || [],
+          // Essential fields
+          yearsInBusiness: yearsInBusiness || null,
+          serviceAreas: serviceAreas || [],
+          maxCapacity: maxCapacity || null,
+          minCapacity: minCapacity || null,
+          eventTypes: eventTypes || [],
+          businessHours: businessHours || {},
+          paymentMethods: paymentMethods || [],
+          portfolioUrl: null, // Replaced with work samples upload
           subscriptionActive: true,
           verified: false,
-          verificationStatus: 'PENDING', // Start with pending verification
+          verificationStatus: 'PENDING',
           verificationNotes: 'New vendor application submitted. Awaiting manual review.'
         }
       })

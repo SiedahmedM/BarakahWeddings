@@ -71,6 +71,17 @@ model Vendor {
   zipCode          String
   priceRange       PriceRange
   islamicCompliances Json?
+  
+  // Essential business information
+  yearsInBusiness  String?
+  serviceAreas     Json?    // Array of service areas
+  maxCapacity      String?
+  minCapacity      String?
+  eventTypes       Json?    // Array of event types
+  businessHours    Json?    // Object with business hours for each day
+  paymentMethods   Json?    // Array of payment methods
+  portfolioUrl     String?
+  
   subscriptionActive Boolean @default(true)
   verified         Boolean @default(false)
   verificationStatus VerificationStatus @default(PENDING)
