@@ -1,14 +1,19 @@
 import { NextAuthOptions } from "next-auth"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs"
+import bcrypt from 'bcryptjs'
 import { prisma } from "./prisma"
 
 interface UserWithVendor {
   id: string
   email: string
-  name: string
-  vendor?: any
+  name?: string | null
+  vendor?: {
+    id: string
+    businessName: string
+    verified: boolean
+    verificationStatus: string
+  } | null
 }
 
 export const authOptions: NextAuthOptions = {
@@ -39,14 +44,15 @@ export const authOptions: NextAuthOptions = {
           }
         })
 
-        if (!user) {
+        if (!user || !user.password) {
           return null
         }
 
-        // For demo purposes, allow login with any password for existing users
-        // In production, you would verify the hashed password here
-        // const isValidPassword = await bcrypt.compare(credentials.password, user.password)
-        // if (!isValidPassword) return null
+        // Verify the password
+        const isValidPassword = await bcrypt.compare(credentials.password, user.password)
+        if (!isValidPassword) {
+          return null
+        }
         
         return {
           id: user.id,

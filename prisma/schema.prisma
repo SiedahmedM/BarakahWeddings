@@ -39,6 +39,7 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
+  password      String?   // Add password field for hashed passwords
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -72,6 +73,10 @@ model Vendor {
   islamicCompliances Json?
   subscriptionActive Boolean @default(true)
   verified         Boolean @default(false)
+  verificationStatus VerificationStatus @default(PENDING)
+  verificationNotes String? @db.Text
+  verifiedAt       DateTime?
+  verifiedBy       String?
   rating           Float?
   reviewCount      Int     @default(0)
   createdAt        DateTime @default(now())
@@ -149,4 +154,12 @@ enum QuoteStatus {
   PENDING
   RESPONDED
   CLOSED
+}
+
+enum VerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
 }

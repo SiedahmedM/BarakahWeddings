@@ -102,7 +102,12 @@ export default function VendorRegisterPage() {
       })
 
       if (response.ok) {
-        router.push('/vendor/login?registered=true')
+        const data = await response.json()
+        if (data.status === 'PENDING') {
+          router.push('/vendor/registration-success')
+        } else {
+          router.push('/vendor/login?registered=true')
+        }
       } else {
         const data = await response.json()
         setError(data.error || 'Registration failed')

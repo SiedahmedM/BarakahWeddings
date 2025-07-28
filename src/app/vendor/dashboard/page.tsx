@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Star, MessageSquare, Calendar, Settings, Eye, Phone, Mail } from 'lucide-react'
+import { Star, MessageSquare, Calendar, Settings, Eye, Phone, Mail, Clock } from 'lucide-react'
 import Logo from '../../../components/Logo'
 
 interface QuoteRequest {
@@ -71,8 +71,13 @@ export default function VendorDashboard() {
     rating: 4.8,
     reviewCount: 24,
     profileViews: 156,
-    verified: true
+    verified: false,
+    verificationStatus: 'PENDING'
   }
+
+  // Get actual vendor data from session
+  const actualVendor = (session.user as any)?.vendor
+  const vendor = actualVendor || mockVendor
 
   const stats = [
     {
@@ -101,6 +106,9 @@ export default function VendorDashboard() {
     }
   ]
 
+  // Show verification status banner for unverified vendors
+  const showVerificationBanner = !vendor.verified
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -124,9 +132,35 @@ export default function VendorDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Verification Status Banner */}
+        {showVerificationBanner && (
+          <div className="mb-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <div className="flex items-center">
+              <Clock className="w-6 h-6 text-yellow-600 mr-3" />
+              <div>
+                <h3 className="text-lg font-semibold text-yellow-800">
+                  Application Under Review
+                </h3>
+                                  <p className="text-yellow-700 mt-1">
+                    Your vendor application is currently being reviewed by our team. 
+                    You&apos;ll receive an email notification once your account is approved.
+                  </p>
+                <p className="text-yellow-600 text-sm mt-2">
+                  Status: {vendor.verificationStatus?.replace('_', ' ') || 'PENDING'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Vendor Dashboard</h1>
-          <p className="text-gray-600">Manage your business profile and customer inquiries</p>
+          <p className="text-gray-600">
+            {vendor.verified 
+              ? 'Manage your business profile and customer inquiries'
+              : 'Your dashboard will be fully accessible once your application is approved'
+            }
+          </p>
         </div>
 
         {/* Stats Grid */}
@@ -152,7 +186,15 @@ export default function VendorDashboard() {
                 <h2 className="text-xl font-semibold text-gray-900">Recent Quote Requests</h2>
               </div>
               <div className="p-6">
-                {quoteRequests.length > 0 ? (
+                {!vendor.verified ? (
+                  <div className="text-center py-8">
+                    <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Account Pending Approval</h3>
+                    <p className="text-gray-600">
+                      Quote requests will appear here once your account is verified and customers can find your profile.
+                    </p>
+                  </div>
+                ) : quoteRequests.length > 0 ? (
                   <div className="space-y-4">
                     {quoteRequests.slice(0, 5).map((quote) => (
                       <div key={quote.id} className="border border-gray-200 rounded-lg p-4">
@@ -209,21 +251,31 @@ export default function VendorDashboard() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <Link
-                  href={`/vendor/${mockVendor.id}`}
-                  className="block w-full bg-emerald-600 text-white text-center py-2 px-4 rounded-md hover:bg-emerald-700 transition duration-200"
-                >
-                  View Public Profile
-                </Link>
-                <button className="block w-full bg-gray-600 text-white text-center py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200">
-                  Edit Profile
-                </button>
-                <button className="block w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
-                  Manage Photos
-                </button>
-                <button className="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition duration-200">
-                  View Analytics
-                </button>
+                {vendor.verified ? (
+                  <>
+                    <Link
+                      href={`/vendor/${vendor.id}`}
+                      className="block w-full bg-emerald-600 text-white text-center py-2 px-4 rounded-md hover:bg-emerald-700 transition duration-200"
+                    >
+                      View Public Profile
+                    </Link>
+                    <button className="block w-full bg-gray-600 text-white text-center py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200">
+                      Edit Profile
+                    </button>
+                    <button className="block w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                      Manage Photos
+                    </button>
+                    <button className="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition duration-200">
+                      View Analytics
+                    </button>
+                  </>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-gray-600 text-sm">
+                      Actions will be available once your account is approved.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -234,11 +286,11 @@ export default function VendorDashboard() {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Profile Status</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    mockVendor.verified 
+                    vendor.verified 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-yellow-100 text-yellow-800'
                   }`}>
-                    {mockVendor.verified ? 'Verified' : 'Pending'}
+                    {vendor.verified ? 'Verified' : 'Pending Approval'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">

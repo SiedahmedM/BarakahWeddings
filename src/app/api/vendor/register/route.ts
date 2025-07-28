@@ -61,8 +61,7 @@ export async function POST(request: NextRequest) {
         data: {
           name,
           email,
-          // Note: We're not storing the password for this MVP
-          // In production, you would store the hashed password
+          password: hashedPassword, // Store the hashed password
         }
       })
 
@@ -83,7 +82,9 @@ export async function POST(request: NextRequest) {
           priceRange,
           islamicCompliances: islamicCompliances || [],
           subscriptionActive: true,
-          verified: false
+          verified: false,
+          verificationStatus: 'PENDING', // Start with pending verification
+          verificationNotes: 'New vendor application submitted. Awaiting manual review.'
         }
       })
 
@@ -92,8 +93,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { 
-        message: 'Vendor registration successful',
-        vendorId: result.vendor.id
+        message: 'Vendor registration successful! Your application is under review.',
+        vendorId: result.vendor.id,
+        status: 'PENDING'
       },
       { status: 201 }
     )
