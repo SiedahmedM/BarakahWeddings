@@ -34,10 +34,14 @@ export default function AdminVendorsPage() {
     
     // Check if user is admin
     if (!session?.user || session.user.email !== 'admin@muslimweddinghub.com') {
+      console.log('Not admin user, redirecting to login')
+      console.log('Session:', session)
+      console.log('Status:', status)
       router.push('/vendor/login')
       return
     }
 
+    console.log('Admin user detected, fetching vendors')
     fetchVendors()
   }, [session, status, router])
 

@@ -44,12 +44,12 @@ export const authOptions: NextAuthOptions = {
           }
         })
 
-        if (!user || !user.password) {
+        if (!user || !(user as any).password) {
           return null
         }
 
         // Verify the password
-        const isValidPassword = await bcrypt.compare(credentials.password, user.password)
+        const isValidPassword = await bcrypt.compare(credentials.password, (user as any).password)
         if (!isValidPassword) {
           return null
         }
@@ -64,13 +64,36 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        // When user first logs in, store vendor data in token
         token.vendor = (user as UserWithVendor).vendor
+        token.userId = user.id
       }
+      
+      // Ensure vendor data is always available in token
+      if (!token.vendor && token.userId) {
+        try {
+          const user = await prisma?.user.findUnique({
+            where: { id: token.userId as string },
+            include: { vendor: true }
+          })
+          if (user?.vendor) {
+            token.vendor = user.vendor
+          }
+        } catch (error) {
+          console.error('Error fetching vendor data for token:', error)
+        }
+      }
+      
       return token
     },
     async session({ session, token }) {
