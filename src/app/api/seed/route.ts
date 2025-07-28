@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
-  // Return error if no database connection
+  // Check if database is connected
   if (!prisma) {
+    console.error('Database not configured')
     return NextResponse.json(
       { error: 'Database not configured' },
       { status: 503 }
@@ -11,8 +12,33 @@ export async function POST(request: NextRequest) {
   }
   
   try {
-    console.log('🌙 Setting up Muslim Wedding Marketplace database...')
+    console.log('🌙 Starting database seeding...')
     
+    // Test database connection first
+    try {
+      await prisma.$connect()
+      console.log('✅ Database connected successfully')
+    } catch (connectError) {
+      console.error('❌ Database connection failed:', connectError)
+      return NextResponse.json(
+        { error: 'Database connection failed' },
+        { status: 503 }
+      )
+    }
+
+    // Check if demo vendor already exists
+    const existingVendor = await prisma.vendor.findFirst({
+      where: { businessName: 'Muslim Wedding Hub Demo' }
+    })
+
+    if (existingVendor) {
+      console.log('✅ Demo vendor already exists')
+      return NextResponse.json({
+        message: 'Demo vendor already exists',
+        vendorId: existingVendor.id
+      })
+    }
+
     // Create system admin user
     console.log('Creating system admin user...')
     const adminUser = await prisma.user.upsert({
@@ -24,12 +50,12 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    console.log('✅ Admin user created/updated')
+
     // Create demo vendor
-    console.log('Setting up demo vendor...')
-    const demoVendor = await prisma.vendor.upsert({
-      where: { userId: adminUser.id },
-      update: {},
-      create: {
+    console.log('Creating demo vendor...')
+    const demoVendor = await prisma.vendor.create({
+      data: {
         userId: adminUser.id,
         businessName: 'Muslim Wedding Hub Demo',
         description: 'A beautiful demonstration of our Muslim wedding marketplace featuring authentic Islamic traditions and modern elegance.',
@@ -49,6 +75,8 @@ export async function POST(request: NextRequest) {
         rating: 4.8
       }
     })
+
+    console.log('✅ Demo vendor created')
 
     // Add demo photos
     console.log('Adding demo photos...')
@@ -70,14 +98,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    await prisma.vendorPhoto.create({
-      data: {
-        vendorId: demoVendor.id,
-        url: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&h=600&fit=crop',
-        isMain: false,
-        order: 3
-      }
-    })
+    console.log('✅ Demo photos added')
 
     // Add demo reviews
     console.log('Adding demo reviews...')
@@ -101,15 +122,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    await prisma.review.create({
-      data: {
-        vendorId: demoVendor.id,
-        reviewerName: 'Bilal & Dounia',
-        rating: 4,
-        comment: 'Great venue with excellent Islamic facilities. The no-alcohol policy was strictly enforced and made our families very comfortable.',
-        approved: true
-      }
-    })
+    console.log('✅ Demo reviews added')
 
     // Add demo quote request
     console.log('Adding demo quote request...')
@@ -125,6 +138,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    console.log('✅ Demo quote request added')
     console.log('✅ Database seeding completed successfully!')
     
     return NextResponse.json({
@@ -133,10 +147,22 @@ export async function POST(request: NextRequest) {
     })
     
   } catch (error) {
-    console.error('Error seeding database:', error)
+    console.error('❌ Error seeding database:', error)
+    
+    // Return more specific error information
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Database seeding failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
+  } finally {
+    // Always disconnect
+    try {
+      await prisma.$disconnect()
+    } catch (disconnectError) {
+      console.error('Error disconnecting from database:', disconnectError)
+    }
   }
 } 
