@@ -30,6 +30,21 @@ export default function AdminDebugPage() {
     }
   }
 
+  const refreshSession = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/auth/refresh')
+      if (response.ok) {
+        // Force a page reload to refresh the client session
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Error refreshing session:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-emerald-50 to-emerald-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl w-full space-y-8">
@@ -168,6 +183,14 @@ export default function AdminDebugPage() {
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 disabled:opacity-50"
             >
               {isLoading ? 'Refreshing...' : 'Refresh Server Session'}
+            </button>
+            
+            <button
+              onClick={refreshSession}
+              disabled={isLoading}
+              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-200 disabled:opacity-50"
+            >
+              {isLoading ? 'Refreshing...' : 'Force Session Refresh'}
             </button>
             
             <Link

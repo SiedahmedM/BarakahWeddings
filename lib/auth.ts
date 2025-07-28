@@ -77,6 +77,8 @@ export const authOptions: NextAuthOptions = {
         // When user first logs in, store vendor data in token
         token.vendor = (user as UserWithVendor).vendor
         token.userId = user.id
+        token.email = user.email
+        token.name = user.name
       }
       
       // Ensure vendor data is always available in token
@@ -100,11 +102,26 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         (session.user as any).id = token.sub!
         ;(session.user as any).vendor = token.vendor
+        session.user.email = token.email as string
+        session.user.name = token.name as string
       }
       return session
     }
   },
   pages: {
     signIn: "/vendor/login"
+  },
+  // Add these for better client-side handling
+  useSecureCookies: process.env.NODE_ENV === 'production',
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
+    }
   }
 }
