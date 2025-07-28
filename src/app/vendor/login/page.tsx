@@ -71,6 +71,7 @@ export default function VendorLoginPage() {
                     id="email"
                     name="email"
                     type="email"
+                    autoComplete="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -90,6 +91,7 @@ export default function VendorLoginPage() {
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}

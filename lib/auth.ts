@@ -72,7 +72,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         // When user first logs in, store all data in token
         token.vendor = (user as UserWithVendor).vendor
-        token.userId = user.id
+        token.sub = user.id
         token.email = user.email
         token.name = user.name
       }

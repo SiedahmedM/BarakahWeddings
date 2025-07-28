@@ -72,6 +72,7 @@ function QuoteRequestForm({ vendorId }: { vendorId: string }) {
           type="text"
           id="customerName"
           name="customerName"
+          autoComplete="name"
           required
           placeholder="Your full name"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -86,6 +87,7 @@ function QuoteRequestForm({ vendorId }: { vendorId: string }) {
           type="email"
           id="customerEmail"
           name="customerEmail"
+          autoComplete="email"
           required
           placeholder="your.email@example.com"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -100,6 +102,7 @@ function QuoteRequestForm({ vendorId }: { vendorId: string }) {
           type="tel"
           id="customerPhone"
           name="customerPhone"
+          autoComplete="tel"
           placeholder="+1 (555) 123-4567"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
         />

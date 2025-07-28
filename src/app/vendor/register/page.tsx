@@ -186,6 +186,7 @@ export default function VendorRegisterPage() {
                       type="text"
                       id="name"
                       name="name"
+                      autoComplete="name"
                       required
                       value={formData.name}
                       onChange={handleInputChange}
@@ -205,6 +206,7 @@ export default function VendorRegisterPage() {
                       type="email"
                       id="email"
                       name="email"
+                      autoComplete="email"
                       required
                       value={formData.email}
                       onChange={handleInputChange}
@@ -224,6 +226,7 @@ export default function VendorRegisterPage() {
                         type={showPassword ? 'text' : 'password'}
                         id="password"
                         name="password"
+                        autoComplete="new-password"
                         required
                         value={formData.password}
                         onChange={handleInputChange}
@@ -248,6 +251,7 @@ export default function VendorRegisterPage() {
                       type="password"
                       id="confirmPassword"
                       name="confirmPassword"
+                      autoComplete="new-password"
                       required
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
