@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create quote request
-    const quoteRequest = await prisma.quoteRequest.create({
+    await prisma.quoteRequest.create({
       data: {
         vendorId,
         customerName,

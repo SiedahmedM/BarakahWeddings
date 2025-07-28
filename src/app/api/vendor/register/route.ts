@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       eventTypes,
       businessHours,
       paymentMethods,
-      workSamples: _workSamples
+      workSamples: _workSamples // Intentionally unused - file uploads handled separately
     } = data
 
     // Validate required fields
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           name,
           email,
           password: hashedPassword, // Store the hashed password
-        }
+        } as any
       })
 
       const vendor = await prisma.vendor.create({
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
           userId: user.id,
           businessName,
           description: description || null,
-          category,
+          category: category as any,
           phone,
           whatsapp: whatsapp || null,
           email,
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
           city,
           state,
           zipCode: null, // No longer required
-          priceRange,
+          priceRange: priceRange as any,
           islamicCompliances: islamicCompliances || [],
           // Essential fields
           yearsInBusiness: yearsInBusiness || null,
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
           verified: false,
           verificationStatus: 'PENDING',
           verificationNotes: 'New vendor application submitted. Awaiting manual review.'
-        }
+        } as any
       })
 
       return { user, vendor }
