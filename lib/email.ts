@@ -18,20 +18,23 @@ export async function sendEmail({ to, subject, html }: EmailData) {
     console.log('Attempting to send email to:', to)
     console.log('Using API key:', process.env.RESEND_API_KEY ? 'Present' : 'Missing')
 
-    const { data, error } = await resend.emails.send({
+    console.log('Sending email with Resend...')
+    const result = await resend.emails.send({
       from: 'onboarding@resend.dev', // Use Resend's default domain for testing
       to: [to],
       subject,
       html,
     })
 
-    if (error) {
-      console.error('Resend API error:', error)
-      return { success: false, error: `Resend API error: ${error.message}` }
+    console.log('Resend response:', result)
+
+    if (result.error) {
+      console.error('Resend API error:', result.error)
+      return { success: false, error: `Resend API error: ${result.error.message || result.error}` }
     }
 
-    console.log('Email sent successfully:', data)
-    return { success: true, data }
+    console.log('Email sent successfully:', result.data)
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Email service error:', error)
     return { 
