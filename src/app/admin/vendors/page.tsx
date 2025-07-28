@@ -30,19 +30,34 @@ export default function AdminVendorsPage() {
   const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (status === 'loading') return
+    // Wait for session to load
+    if (status === 'loading') {
+      console.log('Session loading...')
+      return
+    }
     
-    // Check if user is admin
-    if (!session?.user || session.user.email !== 'admin@muslimweddinghub.com') {
-      console.log('Not admin user, redirecting to login')
-      console.log('Session:', session)
-      console.log('Status:', status)
+    // Session loaded but no user
+    if (status === 'unauthenticated') {
+      console.log('No session found, redirecting to login')
       router.push('/vendor/login')
       return
     }
+    
+    // Session loaded with user
+    if (status === 'authenticated') {
+      console.log('Session authenticated:', session?.user?.email)
+      
+      // Check if user is admin
+      if (!session?.user || session.user.email !== 'admin@muslimweddinghub.com') {
+        console.log('Not admin user, redirecting to login')
+        console.log('Session:', session)
+        router.push('/vendor/login')
+        return
+      }
 
-    console.log('Admin user detected, fetching vendors')
-    fetchVendors()
+      console.log('Admin user detected, fetching vendors')
+      fetchVendors()
+    }
   }, [session, status, router])
 
   const fetchVendors = async () => {
@@ -137,7 +152,18 @@ export default function AdminVendorsPage() {
     }
   }
 
-  if (status === 'loading' || isLoading) {
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600"></div>
+          <p className="mt-4 text-gray-600">Loading session...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
