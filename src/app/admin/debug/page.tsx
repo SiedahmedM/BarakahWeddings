@@ -45,6 +45,22 @@ export default function AdminDebugPage() {
     }
   }
 
+  const forceRefreshSession = async () => {
+    setIsLoading(true)
+    try {
+      // First, sign out to clear any cached session
+      await fetch('/api/auth/signout', { method: 'POST' })
+      
+      // Wait a moment, then redirect to login
+      setTimeout(() => {
+        window.location.href = '/vendor/login'
+      }, 1000)
+    } catch (error) {
+      console.error('Error force refreshing session:', error)
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-emerald-50 to-emerald-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl w-full space-y-8">
@@ -190,7 +206,15 @@ export default function AdminDebugPage() {
               disabled={isLoading}
               className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-200 disabled:opacity-50"
             >
-              {isLoading ? 'Refreshing...' : 'Force Session Refresh'}
+              {isLoading ? 'Refreshing...' : 'Refresh Session'}
+            </button>
+            
+            <button
+              onClick={forceRefreshSession}
+              disabled={isLoading}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200 disabled:opacity-50"
+            >
+              {isLoading ? 'Signing Out...' : 'Force Sign Out & Login'}
             </button>
             
             <Link

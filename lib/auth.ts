@@ -74,25 +74,29 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // When user first logs in, store vendor data in token
+        // When user first logs in, store all data in token
         token.vendor = (user as UserWithVendor).vendor
         token.userId = user.id
         token.email = user.email
         token.name = user.name
       }
       
-      // Ensure vendor data is always available in token
-      if (!token.vendor && token.userId) {
+      // For subsequent requests, ensure we have all the data
+      // This is especially important for admin users
+      if (token.userId && (!token.vendor || !token.email || !token.name)) {
         try {
           const user = await prisma?.user.findUnique({
             where: { id: token.userId as string },
             include: { vendor: true }
           })
-          if (user?.vendor) {
-            token.vendor = user.vendor
+          if (user) {
+            // Update token with missing data
+            if (!token.email) token.email = user.email
+            if (!token.name) token.name = user.name
+            if (!token.vendor) token.vendor = user.vendor
           }
         } catch (error) {
-          console.error('Error fetching vendor data for token:', error)
+          console.error('Error fetching user data for token:', error)
         }
       }
       
