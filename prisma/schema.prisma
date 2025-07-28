@@ -134,6 +134,10 @@ model QuoteRequest {
   eventDate   DateTime?
   message     String   @db.Text
   status      QuoteStatus @default(PENDING)
+  vendorResponse String? @db.Text
+  respondedAt DateTime?
+  proposedPrice Float?
+  additionalDetails String? @db.Text
   createdAt   DateTime @default(now())
   
   vendor      Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
@@ -164,6 +168,7 @@ enum PriceRange {
 enum QuoteStatus {
   PENDING
   RESPONDED
+  DECLINED
   CLOSED
 }
 

@@ -159,3 +159,94 @@ export function generateRejectionEmail(vendorName: string, businessName: string,
     `
   }
 } 
+
+export interface QuoteResponseEmailData {
+  customerName: string
+  vendorName: string
+  action: string
+  message: string
+  proposedPrice?: string
+  additionalDetails?: string
+  customerPhone?: string | null
+  eventDate?: Date | null
+}
+
+export function generateQuoteResponseEmail(data: QuoteResponseEmailData) {
+  const { customerName, vendorName, action, message, proposedPrice, additionalDetails, eventDate } = data
+  
+  const isDeclined = action === 'decline'
+  const statusColor = isDeclined ? '#dc2626' : '#059669'
+  const statusBg = isDeclined ? '#fef2f2' : '#f0fdf4'
+  const statusBorder = isDeclined ? '#fecaca' : '#bbf7d0'
+  
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #059669; margin: 0;">Muslim Wedding Hub</h1>
+        <p style="color: #6b7280; margin: 5px 0;">Quote Response Update</p>
+      </div>
+      
+      <div style="background-color: ${statusBg}; border: 1px solid ${statusBorder}; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+        <h2 style="color: ${statusColor}; margin: 0 0 15px 0;">
+          ${isDeclined ? 'Quote Request Declined' : 'Quote Response Received'}
+        </h2>
+        <p style="color: #374151; line-height: 1.6; margin: 0;">
+          Dear ${customerName},
+        </p>
+        <p style="color: #374151; line-height: 1.6; margin: 15px 0 0 0;">
+          ${vendorName} has ${isDeclined ? 'declined' : 'responded to'} your quote request${eventDate ? ` for your event on ${new Date(eventDate).toLocaleDateString()}` : ''}.
+        </p>
+      </div>
+      
+      <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+        <h3 style="color: #374151; margin: 0 0 15px 0;">Vendor Response:</h3>
+        <p style="color: #6b7280; line-height: 1.6; margin: 0; font-style: italic;">
+          "${message}"
+        </p>
+        
+        ${proposedPrice ? `
+          <div style="margin-top: 20px; padding: 15px; background-color: #f0fdf4; border-radius: 6px;">
+            <h4 style="color: #059669; margin: 0 0 10px 0;">Proposed Price:</h4>
+            <p style="color: #374151; font-size: 18px; font-weight: bold; margin: 0;">$${proposedPrice}</p>
+          </div>
+        ` : ''}
+        
+        ${additionalDetails ? `
+          <div style="margin-top: 15px;">
+            <h4 style="color: #374151; margin: 0 0 10px 0;">Additional Details:</h4>
+            <p style="color: #6b7280; line-height: 1.6; margin: 0;">
+              ${additionalDetails}
+            </p>
+          </div>
+        ` : ''}
+      </div>
+      
+      ${!isDeclined ? `
+        <div style="background-color: #f0fdf4; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="color: #059669; margin: 0 0 15px 0;">Next Steps:</h3>
+          <p style="color: #374151; line-height: 1.6; margin: 0;">
+            Contact ${vendorName} directly to discuss your wedding details further and finalize your booking.
+          </p>
+          <p style="color: #6b7280; line-height: 1.6; margin: 10px 0 0 0; font-size: 14px;">
+            You can reach them through their profile on Muslim Wedding Hub or use the contact information they provided.
+          </p>
+        </div>
+      ` : `
+        <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="color: #374151; margin: 0 0 15px 0;">Other Options:</h3>
+          <p style="color: #6b7280; line-height: 1.6; margin: 0;">
+            Don't worry! You can browse other qualified vendors on Muslim Wedding Hub who might be a perfect fit for your special day.
+          </p>
+        </div>
+      `}
+      
+      <div style="text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px;">
+        <p>Thank you for using Muslim Wedding Hub!</p>
+        <p style="margin-top: 20px;">
+          Questions? Contact us at 
+          <a href="mailto:support@muslimweddinghub.com" style="color: #059669;">support@muslimweddinghub.com</a>
+        </p>
+      </div>
+    </div>
+  `
+}
