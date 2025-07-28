@@ -126,19 +126,33 @@ export async function POST() {
 
     // Add demo quote request
     console.log('Adding demo quote request...')
-    await prisma.quoteRequest.create({
-      data: {
+    
+    // Check if demo quote request already exists
+    const existingQuote = await prisma.quoteRequest.findFirst({
+      where: {
         vendorId: demoVendor.id,
         customerName: 'Demo Customer',
-        customerEmail: 'demo@example.com',
-        customerPhone: '+1 (555) 987-6543',
-        eventDate: new Date('2024-12-15'),
-        message: 'This is a demo quote request to show how the system works.',
-        status: 'PENDING'
+        customerEmail: 'demo@example.com'
       }
     })
 
-    console.log('✅ Demo quote request added')
+    if (!existingQuote) {
+      await prisma.quoteRequest.create({
+        data: {
+          vendorId: demoVendor.id,
+          customerName: 'Demo Customer',
+          customerEmail: 'demo@example.com',
+          customerPhone: '+1 (555) 987-6543',
+          eventDate: new Date('2024-12-15'),
+          message: 'This is a demo quote request to show how the system works.',
+          status: 'PENDING'
+        }
+      })
+      console.log('✅ Demo quote request added')
+    } else {
+      console.log('✅ Demo quote request already exists')
+    }
+
     console.log('✅ Database seeding completed successfully!')
     
     return NextResponse.json({
