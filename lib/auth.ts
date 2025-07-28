@@ -43,8 +43,10 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // For now, we'll skip password verification since we're focusing on the MVP
-        // In production, you'd verify the hashed password here
+        // For demo purposes, allow login with any password for existing users
+        // In production, you would verify the hashed password here
+        // const isValidPassword = await bcrypt.compare(credentials.password, user.password)
+        // if (!isValidPassword) return null
         
         return {
           id: user.id,
