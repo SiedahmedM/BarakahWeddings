@@ -27,6 +27,7 @@ export default function AdminVendorsPage() {
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [verificationNotes, setVerificationNotes] = useState('')
+  const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'loading') return
@@ -46,11 +47,34 @@ export default function AdminVendorsPage() {
       if (response.ok) {
         const data = await response.json()
         setVendors(data.vendors)
+      } else if (response.status === 401) {
+        // Admin not properly set up, show fix option
+        setMessage('Admin account needs to be properly configured. Click "Fix Admin Setup" below.')
       }
     } catch (error) {
       console.error('Error fetching vendors:', error)
+      setMessage('Error loading admin dashboard. Please try again.')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const fixAdminSetup = async () => {
+    try {
+      const response = await fetch('/api/admin/fix-admin', {
+        method: 'POST'
+      })
+      
+      if (response.ok) {
+        setMessage('Admin setup fixed! Refreshing...')
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      } else {
+        setMessage('Failed to fix admin setup. Please try again.')
+      }
+    } catch (error) {
+      setMessage('Error fixing admin setup. Please try again.')
     }
   }
 
@@ -150,6 +174,26 @@ export default function AdminVendorsPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Admin Setup Fix */}
+        {message && message.includes('needs to be properly configured') && (
+          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium text-yellow-800">Admin Setup Issue</h3>
+                <p className="text-sm text-yellow-700 mt-1">
+                  Your admin account needs to be properly configured to access the dashboard.
+                </p>
+              </div>
+              <button
+                onClick={fixAdminSetup}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition duration-200"
+              >
+                Fix Admin Setup
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
@@ -337,6 +381,12 @@ export default function AdminVendorsPage() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {message && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg z-50">
+          {message}
         </div>
       )}
     </div>
