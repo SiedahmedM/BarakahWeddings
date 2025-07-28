@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       eventTypes,
       businessHours,
       paymentMethods,
-      workSamples
+      workSamples: _workSamples
     } = data
 
     // Validate required fields

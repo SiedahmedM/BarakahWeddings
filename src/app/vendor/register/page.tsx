@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Eye, EyeOff, User, Mail, Phone, MapPin, Building, Calendar, Clock, Globe } from 'lucide-react'
+import { Eye, EyeOff, User, Mail, Phone, MapPin, Building, Globe } from 'lucide-react'
 import Logo from '../../../components/Logo'
 
 const categories = [
@@ -162,7 +162,7 @@ export default function VendorRegisterPage() {
       Object.entries(formData).forEach(([key, value]) => {
         if (key === 'workSamples') {
           // Handle file uploads
-          formData.workSamples.forEach((file, index) => {
+          formData.workSamples.forEach((file) => {
             formDataToSend.append(`workSamples`, file)
           })
         } else if (Array.isArray(value)) {
@@ -808,7 +808,7 @@ export default function VendorRegisterPage() {
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <h4 className="font-semibold text-yellow-800 mb-2">Important Note</h4>
                   <p className="text-yellow-700 text-sm">
-                    Your application will be reviewed by our team. You'll receive an email notification once your account is approved and activated.
+                    Your application will be reviewed by our team. You&apos;ll receive an email notification once your account is approved and activated.
                   </p>
                 </div>
               </div>

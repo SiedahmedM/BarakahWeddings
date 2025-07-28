@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Check, X, Eye, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
-import Link from 'next/link'
+import { Eye, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 
 interface Vendor {
   id: string

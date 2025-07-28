@@ -11,24 +11,21 @@ export default function AdminTestLoginPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [adminStatus, setAdminStatus] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+
 
   useEffect(() => {
     checkAdminStatus()
   }, [session, status])
 
   const checkAdminStatus = async () => {
-    setIsLoading(true)
     try {
       const response = await fetch('/api/admin/check-admin')
       if (response.ok) {
         const data = await response.json()
         setAdminStatus(data)
       }
-    } catch (error) {
-      console.error('Error checking admin status:', error)
-    } finally {
-      setIsLoading(false)
+    } catch {
+      console.error('Error checking admin status')
     }
   }
 

@@ -58,7 +58,7 @@ export default function TestEmailPage() {
       } else {
         setResult({ success: false, error: data.error })
       }
-    } catch (error) {
+    } catch {
       setResult({ success: false, error: 'Failed to send test email' })
     } finally {
       setIsLoading(false)

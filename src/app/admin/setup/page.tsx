@@ -1,13 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, CheckCircle, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import Logo from '../../../components/Logo'
 
 export default function AdminSetupPage() {
-  const router = useRouter()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -32,8 +30,8 @@ export default function AdminSetupPage() {
           setMessage('Admin password is already set. Please login instead.')
         }
       }
-    } catch (error) {
-      console.error('Error checking admin status:', error)
+    } catch {
+      console.error('Error checking admin status')
     } finally {
       setIsChecking(false)
     }
@@ -72,7 +70,7 @@ export default function AdminSetupPage() {
         const data = await response.json()
         setMessage(data.error || 'Failed to set password')
       }
-    } catch (error) {
+    } catch {
       setMessage('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)
