@@ -46,7 +46,7 @@ async function main() {
       address: "123 Demo Street",
       city: "Demo City",
       state: "DC",
-      zipCode: "12345",
+  
       priceRange: "MODERATE" as const,
       islamicCompliances: ["halal", "prayerSpace"],
       verified: true,
@@ -84,7 +84,6 @@ async function main() {
           address: vendorData.address,
           city: vendorData.city,
           state: vendorData.state,
-          zipCode: vendorData.zipCode,
           priceRange: vendorData.priceRange,
           islamicCompliances: vendorData.islamicCompliances,
           subscriptionActive: true,

@@ -14,10 +14,10 @@ const islamicComplianceIcons: { [key: string]: { icon: string; label: string } }
 }
 
 const priceRangeLabels: { [key: string]: string } = {
-  BUDGET: '$',
-  MODERATE: '$$',
-  LUXURY: '$$$',
-  ULTRA_LUXURY: '$$$$'
+  BUDGET: '$500 - $2,000',
+  MODERATE: '$2,000 - $5,000',
+  LUXURY: '$5,000 - $10,000',
+  ULTRA_LUXURY: '$10,000+'
 }
 
 async function getVendor(id: string) {
@@ -252,7 +252,7 @@ export default async function VendorProfilePage({ params }: { params: Promise<{ 
                 <div className="flex items-center mb-4">
                   <MapPin className="w-5 h-5 text-gray-400 mr-2" />
                   <span className="text-gray-600">
-                    {vendor.address}, {vendor.city}, {vendor.state} {vendor.zipCode}
+                    {vendor.address}, {vendor.city}, {vendor.state}
                   </span>
                 </div>
 
@@ -399,7 +399,7 @@ export default async function VendorProfilePage({ params }: { params: Promise<{ 
                   <MapPin className="w-4 h-4 text-gray-400 mr-3 mt-1" />
                   <span className="text-gray-700">
                     {vendor.address}<br />
-                    {vendor.city}, {vendor.state} {vendor.zipCode}
+                    {vendor.city}, {vendor.state}
                   </span>
                 </div>
               </div>

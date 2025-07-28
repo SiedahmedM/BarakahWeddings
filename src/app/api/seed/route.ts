@@ -67,7 +67,6 @@ export async function POST() {
         address: '123 Islamic Center Way',
         city: 'Toronto',
         state: 'Ontario',
-        zipCode: 'M5V 3A8',
         priceRange: 'LUXURY',
         islamicCompliances: ['halal', 'prayerSpace', 'genderSeparated', 'noAlcohol'],
         subscriptionActive: true,

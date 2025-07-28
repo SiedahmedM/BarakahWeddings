@@ -48,7 +48,6 @@ export async function POST() {
         address: '123 Demo Street',
         city: 'Toronto',
         state: 'Ontario',
-        zipCode: 'M5V 3A8',
         priceRange: 'MODERATE',
         islamicCompliances: ['halal', 'prayerSpace'],
         subscriptionActive: true,

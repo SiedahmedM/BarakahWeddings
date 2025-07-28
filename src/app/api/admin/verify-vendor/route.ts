@@ -91,7 +91,16 @@ export async function POST(request: NextRequest) {
       }
     } catch (emailError) {
       console.error('Failed to send email notification:', emailError)
-      // Don't fail the entire request if email fails
+      // Return warning about email failure
+      return NextResponse.json({
+        message: `Vendor ${status.toLowerCase()} successfully, but email notification failed`,
+        warning: 'Email notification failed - please check email service configuration',
+        vendor: {
+          id: updatedVendor.id,
+          businessName: updatedVendor.businessName,
+          verified: updatedVendor.verified
+        }
+      })
     }
 
     return NextResponse.json({

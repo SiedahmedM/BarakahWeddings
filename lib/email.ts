@@ -20,7 +20,7 @@ export async function sendEmail({ to, subject, html }: EmailData) {
 
     console.log('Sending email with Resend...')
     const result = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Use Resend's default domain for testing
+      from: 'onboarding@resend.dev', // Use Resend's default domain (works without verification)
       to: [to],
       subject,
       html,
@@ -95,7 +95,7 @@ export function generateApprovalEmail(vendorName: string, businessName: string) 
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="color: #6b7280; font-size: 14px; margin: 0;">
             Thank you for choosing Muslim Wedding Hub!<br>
-            We're excited to help you connect with Muslim couples in your area.
+            We're excited to help you connect with Muslim Vendors in your area.
           </p>
         </div>
       </div>

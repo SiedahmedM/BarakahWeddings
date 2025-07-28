@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       eventTypes,
       businessHours,
       paymentMethods,
-      workSamples: _workSamples // Intentionally unused - file uploads handled separately
+      workSamples: _workSamples // TODO: Implement file upload to storage
     } = data
 
     // Validate required fields
@@ -124,6 +124,7 @@ export async function POST(request: NextRequest) {
           businessHours: businessHours || {},
           paymentMethods: paymentMethods || [],
           portfolioUrl: null, // Replaced with work samples upload
+          workSampleUrls: [], // TODO: Store uploaded file URLs here
           subscriptionActive: true,
           verified: false,
           verificationStatus: 'PENDING',
@@ -145,7 +146,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error registering vendor:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

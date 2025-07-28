@@ -22,10 +22,10 @@ const categories = [
 ]
 
 const priceRanges = [
-  { value: 'BUDGET', label: '$ - Budget-friendly' },
-  { value: 'MODERATE', label: '$$ - Moderate pricing' },
-  { value: 'LUXURY', label: '$$$ - Luxury services' },
-  { value: 'ULTRA_LUXURY', label: '$$$$ - Ultra-luxury' },
+  { value: 'BUDGET', label: '$500 - $2,000' },
+  { value: 'MODERATE', label: '$2,000 - $5,000' },
+  { value: 'LUXURY', label: '$5,000 - $10,000' },
+  { value: 'ULTRA_LUXURY', label: '$10,000+' },
 ]
 
 const islamicCompliances = [
@@ -86,7 +86,7 @@ export default function VendorRegisterPage() {
     address: '',
     city: '',
     state: '',
-    zipCode: '',
+
     priceRange: '',
     islamicCompliances: [] as string[],
     

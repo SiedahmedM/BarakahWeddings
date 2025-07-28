@@ -65,10 +65,9 @@ model Vendor {
   whatsapp         String?
   email            String
   website          String?
-  address          String
+  address          String?
   city             String
   state            String
-  zipCode          String
   priceRange       PriceRange
   islamicCompliances Json?
   
@@ -81,6 +80,7 @@ model Vendor {
   businessHours    Json?    // Object with business hours for each day
   paymentMethods   Json?    // Array of payment methods
   portfolioUrl     String?
+  workSampleUrls   Json?    // Array of uploaded work sample URLs
   
   subscriptionActive Boolean @default(true)
   verified         Boolean @default(false)

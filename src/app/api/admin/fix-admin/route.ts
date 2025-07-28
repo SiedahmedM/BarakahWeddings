@@ -43,7 +43,7 @@ export async function POST() {
           address: 'System Address',
           city: 'System City',
           state: 'System State',
-          zipCode: '00000',
+  
           priceRange: 'MODERATE',
           islamicCompliances: [],
           subscriptionActive: true,
