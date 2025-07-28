@@ -66,10 +66,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
-  },
-  jwt: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -80,26 +76,6 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email
         token.name = user.name
       }
-      
-      // For subsequent requests, ensure we have all the data
-      // This is especially important for admin users
-      if (token.userId && (!token.vendor || !token.email || !token.name)) {
-        try {
-          const user = await prisma?.user.findUnique({
-            where: { id: token.userId as string },
-            include: { vendor: true }
-          })
-          if (user) {
-            // Update token with missing data
-            if (!token.email) token.email = user.email
-            if (!token.name) token.name = user.name
-            if (!token.vendor) token.vendor = user.vendor
-          }
-        } catch (error) {
-          console.error('Error fetching user data for token:', error)
-        }
-      }
-      
       return token
     },
     async session({ session, token }) {
@@ -114,18 +90,5 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/vendor/login"
-  },
-  // Add these for better client-side handling
-  useSecureCookies: process.env.NODE_ENV === 'production',
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
-    }
   }
 }
