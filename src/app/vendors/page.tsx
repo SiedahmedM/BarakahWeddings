@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Filter, Star, MapPin, Phone, MessageCircle, Check, Send } from "lucide-react"
 import Link from "next/link"
-import { prisma } from "../../../lib/prisma"
+import { prisma } from "@/lib/prisma"
 import Logo from "../../components/Logo"
 
 interface SearchParams {
@@ -14,6 +14,8 @@ interface SearchParams {
   noAlcohol?: string
   femaleStaff?: string
 }
+
+
 
 const islamicCompliances = [
   { key: 'halal', label: 'Halal food only', icon: '🥘' },
@@ -337,8 +339,9 @@ function FilterSidebar({ searchParams }: { searchParams: SearchParams }) {
   )
 }
 
-async function VendorsContent({ searchParams }: { searchParams: SearchParams }) {
-  const vendors = await getVendors(searchParams)
+async function VendorsContent({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const params = await searchParams
+  const vendors = await getVendors(params)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -369,7 +372,7 @@ async function VendorsContent({ searchParams }: { searchParams: SearchParams }) 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <FilterSidebar searchParams={searchParams} />
+            <FilterSidebar searchParams={params} />
           </div>
 
           {/* Results */}
@@ -429,7 +432,7 @@ async function VendorsContent({ searchParams }: { searchParams: SearchParams }) 
   )
 }
 
-export default function VendorsPage({ searchParams }: { searchParams: SearchParams }) {
+export default function VendorsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   return (
     <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
       <VendorsContent searchParams={searchParams} />

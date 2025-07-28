@@ -1,6 +1,6 @@
 import { Search, Star, MapPin, Phone, MessageCircle, Heart, Calendar, CheckCircle, Lightbulb, Globe, Users, FileText, Send } from "lucide-react"
 import Link from "next/link"
-import { prisma } from "../../lib/prisma"
+import { prisma } from "@/lib/prisma"
 import Logo from "../components/Logo"
 
 const categories = [

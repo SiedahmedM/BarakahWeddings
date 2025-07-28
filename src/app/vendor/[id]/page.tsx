@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { Star, MapPin, Phone, MessageCircle, Mail, Globe, Check, Calendar, Send } from "lucide-react"
 import Link from "next/link"
-import { prisma } from "../../../../lib/prisma"
+import { prisma } from "@/lib/prisma"
 import Logo from "../../../components/Logo"
 
 const islamicComplianceIcons: { [key: string]: { icon: string; label: string } } = {
@@ -145,8 +145,9 @@ function QuoteRequestForm({ vendorId }: { vendorId: string }) {
   )
 }
 
-export default async function VendorProfilePage({ params }: { params: { id: string } }) {
-  const vendor = await getVendor(params.id)
+export default async function VendorProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const vendor = await getVendor(id)
 
   if (!vendor) {
     notFound()

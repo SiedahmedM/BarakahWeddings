@@ -4,6 +4,13 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { prisma } from "./prisma"
 
+interface UserWithVendor {
+  id: string
+  email: string
+  name: string
+  vendor?: any
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: prisma ? PrismaAdapter(prisma) : undefined,
   providers: [
@@ -44,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           vendor: user.vendor
-        }
+        } as UserWithVendor
       }
     })
   ],
@@ -54,14 +61,14 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.vendor = user.vendor
+        token.vendor = (user as UserWithVendor).vendor
       }
       return token
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!
-        session.user.vendor = token.vendor
+      if (token && session.user) {
+        (session.user as any).id = token.sub!
+        ;(session.user as any).vendor = token.vendor
       }
       return session
     }

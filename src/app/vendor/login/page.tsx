@@ -119,7 +119,7 @@ export default function VendorLoginPage() {
 
             <div className="text-center">
               <p className="text-gray-600">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link href="/vendor/register" className="text-emerald-600 hover:text-emerald-700 font-medium">
                   Register here
                 </Link>
