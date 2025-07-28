@@ -18,6 +18,7 @@ interface UserWithVendor {
 
 export const authOptions: NextAuthOptions = {
   adapter: prisma ? PrismaAdapter(prisma) : undefined,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "credentials",

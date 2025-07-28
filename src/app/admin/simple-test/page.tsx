@@ -8,15 +8,15 @@ export default function SimpleTestPage() {
   const { data: session, status } = useSession()
   const [testResult, setTestResult] = useState<string>('')
 
-  const testSession = async () => {
-    try {
-      const response = await fetch('/api/test-session')
-      const data = await response.json()
-      setTestResult(JSON.stringify(data, null, 2))
-    } catch (error) {
-      setTestResult('Error: ' + error)
-    }
-  }
+                const testSession = async () => {
+                try {
+                  const response = await fetch('/api/debug-session')
+                  const data = await response.json()
+                  setTestResult(JSON.stringify(data, null, 2))
+                } catch (error) {
+                  setTestResult('Error: ' + error)
+                }
+              }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
