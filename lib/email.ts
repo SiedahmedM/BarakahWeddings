@@ -12,26 +12,32 @@ export async function sendEmail({ to, subject, html }: EmailData) {
   try {
     if (!process.env.RESEND_API_KEY) {
       console.warn('RESEND_API_KEY not configured, skipping email send')
-      return { success: false, error: 'Email service not configured' }
+      return { success: false, error: 'Email service not configured - RESEND_API_KEY missing' }
     }
 
+    console.log('Attempting to send email to:', to)
+    console.log('Using API key:', process.env.RESEND_API_KEY ? 'Present' : 'Missing')
+
     const { data, error } = await resend.emails.send({
-      from: 'Muslim Wedding Hub <noreply@muslimweddinghub.com>',
+      from: 'onboarding@resend.dev', // Use Resend's default domain for testing
       to: [to],
       subject,
       html,
     })
 
     if (error) {
-      console.error('Email send error:', error)
-      return { success: false, error: error.message }
+      console.error('Resend API error:', error)
+      return { success: false, error: `Resend API error: ${error.message}` }
     }
 
     console.log('Email sent successfully:', data)
     return { success: true, data }
   } catch (error) {
     console.error('Email service error:', error)
-    return { success: false, error: 'Failed to send email' }
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown email service error' 
+    }
   }
 }
 

@@ -56,7 +56,11 @@ export default function TestEmailPage() {
       if (response.ok) {
         setResult({ success: true, message: data.message })
       } else {
-        setResult({ success: false, error: data.error })
+        setResult({ 
+          success: false, 
+          error: data.error || 'Failed to send test email',
+          details: data.details || data.stack
+        })
       }
     } catch {
       setResult({ success: false, error: 'Failed to send test email' })
@@ -154,6 +158,12 @@ export default function TestEmailPage() {
                     <p className="text-sm">
                       {result.message || result.error}
                     </p>
+                    {result.details && (
+                      <details className="mt-2">
+                        <summary className="text-xs cursor-pointer">Show details</summary>
+                        <pre className="text-xs mt-1 whitespace-pre-wrap">{result.details}</pre>
+                      </details>
+                    )}
                   </div>
                 </div>
               </div>
