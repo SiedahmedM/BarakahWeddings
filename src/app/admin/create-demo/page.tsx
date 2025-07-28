@@ -34,7 +34,7 @@ export default function CreateDemoVendorPage() {
           message: data.error || 'Failed to create demo vendor'
         })
       }
-    } catch (error) {
+    } catch {
       setResult({
         success: false,
         message: 'Network error occurred while creating demo vendor'

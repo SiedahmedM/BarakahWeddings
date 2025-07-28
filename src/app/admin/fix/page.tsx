@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { CheckCircle, AlertTriangle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import Logo from '../../../components/Logo'
 
 export default function AdminFixPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
@@ -22,14 +20,14 @@ export default function AdminFixPage() {
       })
       
       if (response.ok) {
-        const data = await response.json()
+        await response.json()
         setIsSuccess(true)
         setMessage('Admin setup fixed successfully! You can now login.')
       } else {
         const errorData = await response.json()
         setMessage(errorData.error || 'Failed to fix admin setup')
       }
-    } catch (error) {
+    } catch {
       setMessage('Error fixing admin setup. Please try again.')
     } finally {
       setIsLoading(false)

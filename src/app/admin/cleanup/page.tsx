@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { CheckCircle, AlertTriangle, Loader2, Trash2, RefreshCw } from 'lucide-react'
+import { CheckCircle, Loader2, Trash2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import Logo from '../../../components/Logo'
 
 export default function AdminCleanupPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [message, setMessage] = useState('')
@@ -29,7 +27,7 @@ export default function AdminCleanupPage() {
       } else {
         setMessage('Failed to analyze duplicates')
       }
-    } catch (error) {
+    } catch {
       setMessage('Error analyzing duplicates. Please try again.')
     } finally {
       setIsAnalyzing(false)
@@ -59,7 +57,7 @@ export default function AdminCleanupPage() {
         const errorData = await response.json()
         setMessage(errorData.error || 'Failed to cleanup duplicates')
       }
-    } catch (error) {
+    } catch {
       setMessage('Error cleaning up duplicates. Please try again.')
     } finally {
       setIsLoading(false)

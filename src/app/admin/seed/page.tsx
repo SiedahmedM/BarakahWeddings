@@ -32,7 +32,7 @@ export default function AdminSeedPage() {
           message: data.error || 'Failed to seed database'
         })
       }
-    } catch (error) {
+    } catch {
       setResult({
         success: false,
         message: 'Network error occurred while seeding database'

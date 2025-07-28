@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendEmail, generateApprovalEmail, generateRejectionEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   // Return error if no database connection
@@ -69,17 +70,35 @@ export async function POST(request: NextRequest) {
       data: updateData
     })
 
-    // TODO: Send email notification to vendor
-    // This would be implemented with a proper email service like SendGrid, Mailgun, etc.
-    console.log(`Vendor ${vendor.businessName} ${status.toLowerCase()}`)
-    console.log(`Email notification should be sent to: ${vendor.email}`)
+    // Send email notification to vendor
+    try {
+      if (status === 'APPROVED') {
+        const emailData = generateApprovalEmail(vendor.user.name || 'Vendor', vendor.businessName)
+        await sendEmail({
+          to: vendor.email,
+          subject: emailData.subject,
+          html: emailData.html
+        })
+        console.log(`Approval email sent to: ${vendor.email}`)
+      } else if (status === 'REJECTED') {
+        const emailData = generateRejectionEmail(vendor.user.name || 'Vendor', vendor.businessName, notes)
+        await sendEmail({
+          to: vendor.email,
+          subject: emailData.subject,
+          html: emailData.html
+        })
+        console.log(`Rejection email sent to: ${vendor.email}`)
+      }
+    } catch (emailError) {
+      console.error('Failed to send email notification:', emailError)
+      // Don't fail the entire request if email fails
+    }
 
     return NextResponse.json({
       message: `Vendor ${status.toLowerCase()} successfully`,
       vendor: {
         id: updatedVendor.id,
         businessName: updatedVendor.businessName,
-        verificationStatus: updatedVendor.verificationStatus,
         verified: updatedVendor.verified
       }
     })
